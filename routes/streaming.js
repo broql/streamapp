@@ -5,9 +5,12 @@ var fs = require('fs');
 var path = require('path');
 var router = express.Router();
 var Writable = stream.Writable || require('readable-stream').Writable;
-var Busboy = require('busboy');
+//var Busboy = require('busboy');
+var multer = require('multer');
 
 var memStore = { };
+
+
 
 /* Writable memory stream */
 function Streaming(key, options) {
@@ -38,8 +41,45 @@ router.get('/', function (req, res, next) {
   res.render('streaming', {title: 'streamApp'});
 });
 
-router.post('/', function(req, res, next) {
-  var busboy = new Busboy({ headers: req.headers });
+router.post('/',multer({
+    upload:null,// take uploading process
+
+    onFileUploadStart:function(file){
+        //set upload with WritableStream
+        /*this.upload = fs.createWriteStream({
+            filename:file.originalname,
+            mode:"w",
+            chunkSize:1024*4,
+            content_type:file.mimetype,
+            root:"fs"
+        });*/
+        console.log("start recieving file");
+    },
+
+    onFileUploadData:function(file,data) {
+        //put the chucks into db
+        //this.upload.write(data);
+        console.log("git a chunk");
+    },
+
+    onFileUploadComplete:function(file) {
+        //end process
+        /*this.upload.on('drain',function() {
+            this.upload.end();
+        });*/
+    }
+}),function(req,res) {
+    res.sendStatus(200);
+});
+
+router.post('/tmp', function(req, res, next) {
+
+
+    if(done==true){
+        console.log(req.files);
+        res.end("File uploaded.");
+    }
+  /*var busboy = new Busboy({ headers: req.headers });
 
   console.log('busboy', busboy)
 
@@ -54,12 +94,13 @@ router.post('/', function(req, res, next) {
   });
   busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated) {
     console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+
   });
   busboy.on('finish', function() {
     console.log('Done parsing form!');
     res.writeHead(303, { Connection: 'close', Location: '/' });
     res.end();
-  });
+  });*/
 
 
 /*  req.on('data', function(data) {
