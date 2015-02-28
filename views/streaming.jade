@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+
+  video(autoplay, loop, controls)
+    source(src='/streaming/video.mp4', type='video/mp4')
+
+  form(method='POST', action='/streaming', enctype='multipart/form-data', name='foo')
+     input(type='file', name='upload')
+     input(type='submit', value='Submit')

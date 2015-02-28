@@ -1,0 +1,7 @@
+# backend
+node_modules/
+# frontend
+public/.sass-cache
+public/stylesheets/style.css
+public/videos
+!public/videos/.geetkeep
